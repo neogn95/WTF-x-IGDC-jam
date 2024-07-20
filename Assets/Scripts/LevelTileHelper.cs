@@ -12,7 +12,8 @@ public static class LevelTileHelper
     public const char Pillar = '5';
     public const char Rock = 'R';
     public const char Stump = 'S';
-    public const char Tree = 'T';
+    public const char TreeG = '7';
+    public const char TreeB = '8';
     public const char Water = '6';
 
     public static char GetTileChar(GameObject tile, GameObject wallPrefab, GameObject waterPrefab, GameObject floorPrefab, GameObject objectPrefab, GameObject goalPrefab, GameObject playerPrefab,
@@ -29,7 +30,8 @@ public static class LevelTileHelper
         if (tile == pillarPrefab) return Pillar;
         if (tile == rockPrefab) return Rock;
         if (tile == stumpPrefab) return Stump;
-        if (tile == treeBPrefab) return Tree;
+        if (tile == treeBPrefab) return TreeB;
+        if (tile == treeGPrefab) return TreeG;
         return Floor; // Default to floor
     }
 
@@ -49,7 +51,8 @@ public static class LevelTileHelper
             case Pillar: return pillarPrefab;
             case Rock: return rockPrefab;
             case Stump: return stumpPrefab;
-            case Tree: return treeBPrefab;
+            case TreeB: return treeBPrefab;
+            case TreeG: return treeGPrefab;
             default: return floorPrefab;
         }
     }
