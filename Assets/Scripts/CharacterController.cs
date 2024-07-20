@@ -1,13 +1,11 @@
 using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 public class CharacterController : MonoBehaviour
 {
     [Header("Movement Type")]
     public bool useGridMovement = false;
-    public float gridSize = 1f;
-    public float gridMoveSpeed = 5f;
+    public float gridAlignedSpeed = 5f;
 
     [Header("Smooth Movement")]
     public float moveSpeed = 5f;
@@ -28,7 +26,6 @@ public class CharacterController : MonoBehaviour
     private Vector3 moveDirection;
     private bool isGrounded;
     private float lastJumpTime;
-    private bool isMoving = false;
 
     void Start()
     {
@@ -45,25 +42,31 @@ public class CharacterController : MonoBehaviour
     {
         if (useGridMovement)
         {
-            HandleGridInput();
+            HandleGridAlignedInput();
         }
         else
         {
             HandleSmoothInput();
-            if (enableJump)
-            {
-                HandleJump();
-            }
+        }
+
+        if (enableJump)
+        {
+            HandleJump();
         }
     }
 
     void FixedUpdate()
     {
-        if (!useGridMovement)
+        if (useGridMovement)
+        {
+            MoveGridAligned();
+        }
+        else
         {
             MoveSmoothly();
-            ApplyGravity();
         }
+
+        ApplyGravity();
     }
 
     void HandleSmoothInput()
@@ -73,16 +76,15 @@ public class CharacterController : MonoBehaviour
 
         Vector3 movement = cameraTransform.right * moveHorizontal + cameraTransform.forward * moveVertical;
         movement.y = 0f;
-        Vector3 targetDirection = movement.normalized;
-
-        moveDirection = Vector3.Lerp(moveDirection, targetDirection, Time.deltaTime * (isGrounded ? acceleration : acceleration * airControl));
+        moveDirection = movement.normalized;
     }
 
     void MoveSmoothly()
     {
-        Vector3 movement = moveDirection * moveSpeed;
-        Vector3 horizontalVelocity = Vector3.ProjectOnPlane(rb.velocity, Vector3.up);
-        rb.velocity = Vector3.Lerp(horizontalVelocity, movement, Time.fixedDeltaTime * (isGrounded ? acceleration : acceleration * airControl)) + Vector3.up * rb.velocity.y;
+        Vector3 targetVelocity = moveDirection * moveSpeed;
+        Vector3 velocityChange = targetVelocity - rb.velocity;
+        velocityChange.y = 0f;
+        rb.AddForce(velocityChange * acceleration, ForceMode.Acceleration);
 
         if (moveDirection != Vector3.zero)
         {
@@ -90,44 +92,35 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    void HandleGridInput()
+    void HandleGridAlignedInput()
     {
-        if (isMoving) return;
+        float moveHorizontal = Input.GetAxisRaw("Horizontal");
+        float moveVertical = Input.GetAxisRaw("Vertical");
 
-        Vector3 movement = Vector3.zero;
+        Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up).normalized;
+        Vector3 cameraRight = Vector3.ProjectOnPlane(cameraTransform.right, Vector3.up).normalized;
 
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            movement = cameraTransform.forward;
-        }
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            movement = -cameraTransform.forward;
-        }
-        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            movement = -cameraTransform.right;
-        }
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            movement = cameraTransform.right;
-        }
+        Vector3 movement = cameraRight * moveHorizontal + cameraForward * moveVertical;
+        moveDirection = SnapToNearestAxis(movement);
+    }
 
-        if (movement != Vector3.zero)
+    void MoveGridAligned()
+    {
+        Vector3 targetVelocity = moveDirection * gridAlignedSpeed;
+        Vector3 velocityChange = targetVelocity - rb.velocity;
+        velocityChange.y = 0f;
+        rb.AddForce(velocityChange * acceleration, ForceMode.Acceleration);
+
+        if (moveDirection != Vector3.zero)
         {
-            movement.y = 0f; // Ensure movement is on the horizontal plane
-            movement = movement.normalized;
-
-            // Snap the movement to the nearest 90-degree angle
-            Vector3 snappedMovement = SnapToNearestAxis(movement);
-
-            Vector3 targetPosition = transform.position + snappedMovement * gridSize;
-            StartCoroutine(MoveToGridPosition(targetPosition));
+            transform.rotation = Quaternion.LookRotation(moveDirection);
         }
     }
 
     Vector3 SnapToNearestAxis(Vector3 direction)
     {
+        if (direction == Vector3.zero) return Vector3.zero;
+
         float x = Mathf.Abs(direction.x);
         float z = Mathf.Abs(direction.z);
 
@@ -139,24 +132,6 @@ public class CharacterController : MonoBehaviour
         {
             return new Vector3(0, 0, Mathf.Sign(direction.z));
         }
-    }
-
-    IEnumerator MoveToGridPosition(Vector3 targetPosition)
-    {
-        isMoving = true;
-        Vector3 startPosition = transform.position;
-        float journeyLength = Vector3.Distance(startPosition, targetPosition);
-        float startTime = Time.time;
-
-        while (transform.position != targetPosition)
-        {
-            float distanceCovered = (Time.time - startTime) * gridMoveSpeed;
-            float fractionOfJourney = distanceCovered / journeyLength;
-            transform.position = Vector3.Lerp(startPosition, targetPosition, fractionOfJourney);
-            yield return null;
-        }
-
-        isMoving = false;
     }
 
     void HandleJump()
