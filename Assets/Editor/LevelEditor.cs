@@ -163,7 +163,7 @@ public class LevelEditor : EditorWindow
             {
                 width = gridWidth,
                 height = gridHeight,
-                tiles = new string[gridWidth * gridHeight]
+                tiles = new char[gridWidth * gridHeight]
             };
 
             for (int y = 0; y < gridHeight; y++)
@@ -207,26 +207,13 @@ public class LevelEditor : EditorWindow
         }
     }
 
-    private string GetTileChar(GameObject tile)
+    private char GetTileChar(GameObject tile)
     {
-        if (tile == wallPrefab) return "W";
-        if (tile == floorPrefab) return "F";
-        if (tile == objectPrefab) return "O";
-        if (tile == goalPrefab) return "G";
-        if (tile == playerPrefab) return "P";
-        return "F"; // Default to floor
+        return LevelTileHelper.GetTileChar(tile, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab);
     }
 
-    private GameObject GetTilePrefab(string tileChar)
+    private GameObject GetTilePrefab(char tileChar)
     {
-        switch (tileChar)
-        {
-            case "W": return wallPrefab;
-            case "F": return floorPrefab;
-            case "O": return objectPrefab;
-            case "G": return goalPrefab;
-            case "P": return playerPrefab;
-            default: return floorPrefab;
-        }
+        return LevelTileHelper.GetTilePrefab(tileChar, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab);
     }
 }

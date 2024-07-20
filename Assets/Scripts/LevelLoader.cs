@@ -42,16 +42,8 @@ public class LevelLoader : MonoBehaviour
         }
     }
 
-    private GameObject GetTilePrefab(string tileChar)
+    private GameObject GetTilePrefab(char tileChar)
     {
-        switch (tileChar)
-        {
-            case "W": return wallPrefab;
-            case "F": return floorPrefab;
-            case "O": return objectPrefab;
-            case "G": return goalPrefab;
-            case "P": return playerPrefab;
-            default: return floorPrefab;
-        }
+        return LevelTileHelper.GetTilePrefab(tileChar, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab);
     }
 }
