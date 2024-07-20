@@ -40,15 +40,13 @@ public class LevelLoader : MonoBehaviour
     {
         string path = Path.Combine(Application.dataPath, "Levels", levelName + ".json");
         string json = File.ReadAllText(path);
-        // Parse the JSON manually
         JSONData jsonData = JsonUtility.FromJson<JSONData>(json);
 
-        // Create a LevelData object and populate it
         LevelData levelData = new LevelData
         {
             width = jsonData.width,
             height = jsonData.height,
-            tiles = string.Join("", jsonData.tiles).ToCharArray() // Convert string array to single string
+            tiles = string.Join("", jsonData.tiles).ToCharArray()
         };
 
         // Clear existing level
@@ -57,28 +55,31 @@ public class LevelLoader : MonoBehaviour
             Destroy(child.gameObject);
         }
 
+        // Calculate the offset to center the grid
+        float offsetX = -levelData.width / 2f + 0.5f;
+        float offsetY = -levelData.height / 2f + 0.5f;
+
         // Instantiate new level
         for (int y = 0; y < levelData.height; y++)
         {
             for (int x = 0; x < levelData.width; x++)
             {
                 int index = y * levelData.width + x;
-                int z;
-
                 GameObject tilePrefab = GetTilePrefab(levelData.tiles[index]);
-                if (tilePrefab.name == "Floor" || tilePrefab.name == "Water")
-                    z = 0;
-                else
-                    z = 1;
-                Vector3 position = new Vector3(x, z, y);
+
+                // Determine the Z position (height) based on the tile type
+                float z = (tilePrefab.name == "Floor" || tilePrefab.name == "Water") ? 0f : 1f;
+
+                // Apply the offset to center the grid
+                Vector3 position = new Vector3(x + offsetX, z, y + offsetY);
 
                 Instantiate(tilePrefab, position, Quaternion.identity, transform);
 
-                // Always place a water tile
+                // Always place a floor tile if the current tile is not Water or Floor
                 if (tilePrefab.name != "Water" && tilePrefab != floorPrefab)
                 {
-                    position = new Vector3(x, 0, y);
-                    Instantiate(floorPrefab, position, Quaternion.identity, transform);
+                    Vector3 floorPosition = new Vector3(x + offsetX, 0, y + offsetY);
+                    Instantiate(floorPrefab, floorPosition, Quaternion.identity, transform);
                 }
             }
         }
