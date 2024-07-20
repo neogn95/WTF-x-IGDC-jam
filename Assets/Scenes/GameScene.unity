@@ -365,7 +365,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 0}
   bushPrefab: {fileID: 6313907577074550712, guid: fc03433a12d9b4246a79647906b19349, type: 3}
   logPrefab: {fileID: 0}
-  pillarPrefab: {fileID: 0}
+  pillarPrefab: {fileID: 2285140860835320033, guid: 40e61503839886744932543261e8ffc7, type: 3}
   rockPrefab: {fileID: 7574298559826998740, guid: 2e7f75df6502c434299ef4e1cafdb34d, type: 3}
   stumpPrefab: {fileID: 0}
   treeBPrefab: {fileID: 0}
