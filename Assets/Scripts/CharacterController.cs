@@ -1,10 +1,15 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 public class CharacterController : MonoBehaviour
 {
-    [Header("Movement")]
-    public bool enableMovement = true;
+    [Header("Movement Type")]
+    public bool useGridMovement = false;
+    public float gridSize = 1f;
+    public float gridMoveSpeed = 5f;
+
+    [Header("Smooth Movement")]
     public float moveSpeed = 5f;
     public float acceleration = 50f;
     public float deceleration = 50f;
@@ -23,6 +28,7 @@ public class CharacterController : MonoBehaviour
     private Vector3 moveDirection;
     private bool isGrounded;
     private float lastJumpTime;
+    private bool isMoving = false;
 
     void Start()
     {
@@ -37,28 +43,30 @@ public class CharacterController : MonoBehaviour
 
     void Update()
     {
-        if (enableMovement)
+        if (useGridMovement)
         {
-            HandleInput();
+            HandleGridInput();
         }
-
-        if (enableJump)
+        else
         {
-            HandleJump();
+            HandleSmoothInput();
+            if (enableJump)
+            {
+                HandleJump();
+            }
         }
     }
 
     void FixedUpdate()
     {
-        if (enableMovement)
+        if (!useGridMovement)
         {
-            Move();
+            MoveSmoothly();
+            ApplyGravity();
         }
-
-        ApplyGravity();
     }
 
-    void HandleInput()
+    void HandleSmoothInput()
     {
         float moveHorizontal = Input.GetAxisRaw("Horizontal");
         float moveVertical = Input.GetAxisRaw("Vertical");
@@ -70,7 +78,7 @@ public class CharacterController : MonoBehaviour
         moveDirection = Vector3.Lerp(moveDirection, targetDirection, Time.deltaTime * (isGrounded ? acceleration : acceleration * airControl));
     }
 
-    void Move()
+    void MoveSmoothly()
     {
         Vector3 movement = moveDirection * moveSpeed;
         Vector3 horizontalVelocity = Vector3.ProjectOnPlane(rb.velocity, Vector3.up);
@@ -80,6 +88,75 @@ public class CharacterController : MonoBehaviour
         {
             transform.rotation = Quaternion.LookRotation(moveDirection);
         }
+    }
+
+    void HandleGridInput()
+    {
+        if (isMoving) return;
+
+        Vector3 movement = Vector3.zero;
+
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            movement = cameraTransform.forward;
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            movement = -cameraTransform.forward;
+        }
+        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            movement = -cameraTransform.right;
+        }
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            movement = cameraTransform.right;
+        }
+
+        if (movement != Vector3.zero)
+        {
+            movement.y = 0f; // Ensure movement is on the horizontal plane
+            movement = movement.normalized;
+
+            // Snap the movement to the nearest 90-degree angle
+            Vector3 snappedMovement = SnapToNearestAxis(movement);
+
+            Vector3 targetPosition = transform.position + snappedMovement * gridSize;
+            StartCoroutine(MoveToGridPosition(targetPosition));
+        }
+    }
+
+    Vector3 SnapToNearestAxis(Vector3 direction)
+    {
+        float x = Mathf.Abs(direction.x);
+        float z = Mathf.Abs(direction.z);
+
+        if (x > z)
+        {
+            return new Vector3(Mathf.Sign(direction.x), 0, 0);
+        }
+        else
+        {
+            return new Vector3(0, 0, Mathf.Sign(direction.z));
+        }
+    }
+
+    IEnumerator MoveToGridPosition(Vector3 targetPosition)
+    {
+        isMoving = true;
+        Vector3 startPosition = transform.position;
+        float journeyLength = Vector3.Distance(startPosition, targetPosition);
+        float startTime = Time.time;
+
+        while (transform.position != targetPosition)
+        {
+            float distanceCovered = (Time.time - startTime) * gridMoveSpeed;
+            float fractionOfJourney = distanceCovered / journeyLength;
+            transform.position = Vector3.Lerp(startPosition, targetPosition, fractionOfJourney);
+            yield return null;
+        }
+
+        isMoving = false;
     }
 
     void HandleJump()

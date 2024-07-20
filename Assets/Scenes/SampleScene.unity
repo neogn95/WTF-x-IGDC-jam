@@ -448,15 +448,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e7b4574d275db24cb9fd61f4a87e7eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableMovement: 1
+  useGridMovement: 1
+  gridSize: 0.8
+  gridMoveSpeed: 5
   moveSpeed: 5
   acceleration: 50
   deceleration: 50
   airControl: 0.3
   enableJump: 1
   jumpForce: 5
+  jumpCooldown: 0.1
   gravityMultiplier: 2.5
-  cameraTransform: {fileID: 0}
+  cameraTransform: {fileID: 963194228}
 --- !u!54 &1070842199
 Rigidbody:
   m_ObjectHideFlags: 0
