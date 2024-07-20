@@ -9,6 +9,13 @@ public class LevelLoader : MonoBehaviour
     public GameObject objectPrefab;
     public GameObject goalPrefab;
     public GameObject playerPrefab;
+    public GameObject bushPrefab;
+    public GameObject logPrefab;
+    public GameObject pillarPrefab;
+    public GameObject rockPrefab;
+    public GameObject stumpPrefab;
+    public GameObject treeBPrefab;
+    public GameObject treeGPrefab;
 
     public void LoadLevel(string levelName)
     {
@@ -53,12 +60,13 @@ public class LevelLoader : MonoBehaviour
 
     private GameObject GetTilePrefab(char tileChar)
     {
-        return LevelTileHelper.GetTilePrefab(tileChar, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab);
-    }
-}
-
-[System.Serializable]
-public class JSONData
+        return LevelTileHelper.GetTilePrefab(tileChar, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab, 
+            bushPrefab, logPrefab, pillarPrefab, rockPrefab, stumpPrefab, treeBPrefab, treeGPrefab);
+    }                                                                                                                   
+}                                                                                                                       
+                                                                                                                        
+[System.Serializable]                                                                                                   
+public class JSONData                                                                                                 
 {
     public int width;
     public int height;

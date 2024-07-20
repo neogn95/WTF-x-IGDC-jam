@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using System.Collections.Generic;
 using Unity.Plastic.Newtonsoft.Json;
 
 public class LevelEditor : EditorWindow
@@ -18,6 +17,13 @@ public class LevelEditor : EditorWindow
     private GameObject objectPrefab;
     private GameObject goalPrefab;
     private GameObject playerPrefab;
+    private GameObject bushPrefab;
+    private GameObject logPrefab;
+    private GameObject pillarPrefab;
+    private GameObject rockPrefab;
+    private GameObject stumpPrefab;
+    private GameObject treeBPrefab;
+    private GameObject treeGPrefab;
 
     private GameObject currentTile;
     private string levelName = "New Level";
@@ -35,7 +41,13 @@ public class LevelEditor : EditorWindow
         floorPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Floor.prefab");
         objectPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Object.prefab");
         goalPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Goal.prefab");
-        playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab");
+        bushPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Bush.prefab");
+        logPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Log.prefab");
+        pillarPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Pillar.prefab");
+        rockPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Rock.prefab");
+        stumpPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Stump.prefab");
+        treeBPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Tree_Brown.prefab");
+        treeGPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Tree_Green.prefab");
 
         // Initialize the grid
         InitializeGrid();
@@ -64,6 +76,13 @@ public class LevelEditor : EditorWindow
         if (GUILayout.Button("Object")) SetCurrentTile(objectPrefab);
         if (GUILayout.Button("Goal")) SetCurrentTile(goalPrefab);
         if (GUILayout.Button("Player")) SetCurrentTile(playerPrefab);
+        if (GUILayout.Button("Bush")) SetCurrentTile(bushPrefab);
+        if (GUILayout.Button("Log")) SetCurrentTile(logPrefab);
+        if (GUILayout.Button("Pillar")) SetCurrentTile(pillarPrefab);
+        if (GUILayout.Button("Rock")) SetCurrentTile(rockPrefab);
+        if (GUILayout.Button("Stump")) SetCurrentTile(stumpPrefab);
+        if (GUILayout.Button("Tree Brown")) SetCurrentTile(treeBPrefab);
+        if (GUILayout.Button("Tree Green")) SetCurrentTile(treeGPrefab);
         EditorGUILayout.EndHorizontal();
 
         // Level name input
@@ -210,11 +229,13 @@ public class LevelEditor : EditorWindow
 
     private char GetTileChar(GameObject tile)
     {
-        return LevelTileHelper.GetTileChar(tile, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab);
+        return LevelTileHelper.GetTileChar(tile, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab,
+            bushPrefab, logPrefab, pillarPrefab, rockPrefab, stumpPrefab, treeBPrefab, treeGPrefab);
     }
 
     private GameObject GetTilePrefab(char tileChar)
     {
-        return LevelTileHelper.GetTilePrefab(tileChar, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab);
+        return LevelTileHelper.GetTilePrefab(tileChar, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab, 
+            bushPrefab, logPrefab, pillarPrefab, rockPrefab, stumpPrefab, treeBPrefab, treeGPrefab);
     }
 }
