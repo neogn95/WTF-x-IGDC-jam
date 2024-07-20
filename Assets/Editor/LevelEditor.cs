@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
+using Unity.Plastic.Newtonsoft.Json;
 
 public class LevelEditor : EditorWindow
 {
@@ -175,7 +176,7 @@ public class LevelEditor : EditorWindow
                 }
             }
 
-            string json = JsonUtility.ToJson(levelData, true);
+            string json = JsonConvert.SerializeObject(levelData, Formatting.Indented); 
             File.WriteAllText(path, json);
             AssetDatabase.Refresh();
         }

@@ -14,7 +14,16 @@ public class LevelLoader : MonoBehaviour
     {
         string path = Path.Combine(Application.dataPath, "Levels", levelName + ".json");
         string json = File.ReadAllText(path);
-        LevelData levelData = JsonUtility.FromJson<LevelData>(json);
+        // Parse the JSON manually
+        JSONData jsonData = JsonUtility.FromJson<JSONData>(json);
+
+        // Create a LevelData object and populate it
+        LevelData levelData = new LevelData
+        {
+            width = jsonData.width,
+            height = jsonData.height,
+            tiles = string.Join("", jsonData.tiles).ToCharArray() // Convert string array to single string
+        };
 
         // Clear existing level
         foreach (Transform child in transform)
@@ -46,4 +55,12 @@ public class LevelLoader : MonoBehaviour
     {
         return LevelTileHelper.GetTilePrefab(tileChar, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab);
     }
+}
+
+[System.Serializable]
+public class JSONData
+{
+    public int width;
+    public int height;
+    public string[] tiles;
 }
