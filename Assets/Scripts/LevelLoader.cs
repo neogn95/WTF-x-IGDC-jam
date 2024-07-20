@@ -1,10 +1,12 @@
 using UnityEngine;
 using System.IO;
+using UnityEditor;
 
 
 public class LevelLoader : MonoBehaviour
 {
     public GameObject wallPrefab;
+    public GameObject waterPrefab;
     public GameObject floorPrefab;
     public GameObject objectPrefab;
     public GameObject goalPrefab;
@@ -16,6 +18,23 @@ public class LevelLoader : MonoBehaviour
     public GameObject stumpPrefab;
     public GameObject treeBPrefab;
     public GameObject treeGPrefab;
+
+
+    private void OnEnable()
+    {
+        wallPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Wall.prefab");
+        waterPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Water.prefab");
+        floorPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Floor.prefab");
+        objectPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Object.prefab");
+        goalPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Goal.prefab");
+        bushPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Bush.prefab");
+        logPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Log.prefab");
+        pillarPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Pillar.prefab");
+        rockPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Rock.prefab");
+        stumpPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Stump.prefab");
+        treeBPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Tree_Brown.prefab");
+        treeGPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Tree_Green.prefab");
+    }
 
     public void LoadLevel(string levelName)
     {
@@ -44,14 +63,21 @@ public class LevelLoader : MonoBehaviour
             for (int x = 0; x < levelData.width; x++)
             {
                 int index = y * levelData.width + x;
-                Vector3 position = new Vector3(x, 0, y);
+                int z;
 
                 GameObject tilePrefab = GetTilePrefab(levelData.tiles[index]);
+                if (tilePrefab.name == "Floor" || tilePrefab.name == "Water")
+                    z = 0;
+                else
+                    z = 1;
+                Vector3 position = new Vector3(x, z, y);
+
                 Instantiate(tilePrefab, position, Quaternion.identity, transform);
 
-                // Always place a floor tile
-                if (tilePrefab != floorPrefab)
+                // Always place a water tile
+                if (tilePrefab.name != "Water" && tilePrefab != floorPrefab)
                 {
+                    position = new Vector3(x, 0, y);
                     Instantiate(floorPrefab, position, Quaternion.identity, transform);
                 }
             }
@@ -60,7 +86,7 @@ public class LevelLoader : MonoBehaviour
 
     private GameObject GetTilePrefab(char tileChar)
     {
-        return LevelTileHelper.GetTilePrefab(tileChar, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab, 
+        return LevelTileHelper.GetTilePrefab(tileChar, wallPrefab, waterPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab, 
             bushPrefab, logPrefab, pillarPrefab, rockPrefab, stumpPrefab, treeBPrefab, treeGPrefab);
     }                                                                                                                   
 }                                                                                                                       

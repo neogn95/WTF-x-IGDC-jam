@@ -12,6 +12,7 @@ public class LevelEditor : EditorWindow
     private Vector2 scrollPosition;
 
     // Prefabs for different tile types
+    private GameObject waterPrefab;
     private GameObject wallPrefab;
     private GameObject floorPrefab;
     private GameObject objectPrefab;
@@ -38,6 +39,7 @@ public class LevelEditor : EditorWindow
     {
         // Load prefabs
         wallPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Wall.prefab");
+        waterPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Water.prefab");
         floorPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Floor.prefab");
         objectPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Object.prefab");
         goalPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Goal.prefab");
@@ -72,6 +74,7 @@ public class LevelEditor : EditorWindow
         // Tile selection
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Wall")) SetCurrentTile(wallPrefab);
+        if (GUILayout.Button("Water")) SetCurrentTile(waterPrefab);
         if (GUILayout.Button("Floor")) SetCurrentTile(floorPrefab);
         if (GUILayout.Button("Object")) SetCurrentTile(objectPrefab);
         if (GUILayout.Button("Goal")) SetCurrentTile(goalPrefab);
@@ -119,7 +122,7 @@ public class LevelEditor : EditorWindow
         {
             for (int y = 0; y < gridHeight; y++)
             {
-                grid[x, y] = floorPrefab; // Initialize with floor tiles
+                grid[x, y] = waterPrefab; // Initialize with water tiles
             }
         }
     }
@@ -169,9 +172,33 @@ public class LevelEditor : EditorWindow
     {
         if (currentTile != null)
         {
-            grid[x, y] = currentTile;
+            // Check if the current tile is an object that should be placed on top of the floor
+            if (IsObjectTile(currentTile))
+            {
+                // If the current tile at this position is not a floor, place a floor first
+                if (grid[x, y] != waterPrefab)
+                {
+                    grid[x, y] = waterPrefab;
+                }
+                // Place the object on top of the floor
+                grid[x, y] = currentTile;
+            }
+            else
+            {
+                // For other tiles (like walls), just place them directly
+                grid[x, y] = currentTile;
+            }
             Repaint();
         }
+    }
+
+    // Helper method to check if a tile is an object that should be placed on top of the floor
+    private bool IsObjectTile(GameObject tile)
+    {
+        return tile == bushPrefab || tile == logPrefab || tile == pillarPrefab ||
+               tile == rockPrefab || tile == stumpPrefab || tile == treeBPrefab ||
+               tile == treeGPrefab || tile == objectPrefab || tile == goalPrefab ||
+               tile == playerPrefab;
     }
 
     private void SaveLevel()
@@ -195,7 +222,7 @@ public class LevelEditor : EditorWindow
                 }
             }
 
-            string json = JsonConvert.SerializeObject(levelData, Formatting.Indented); 
+            string json = JsonConvert.SerializeObject(levelData, Formatting.Indented);
             File.WriteAllText(path, json);
             AssetDatabase.Refresh();
         }
@@ -207,7 +234,14 @@ public class LevelEditor : EditorWindow
         if (!string.IsNullOrEmpty(path))
         {
             string json = File.ReadAllText(path);
-            LevelData levelData = JsonUtility.FromJson<LevelData>(json);
+            JSONData jsonData = JsonUtility.FromJson<JSONData>(json);
+
+            LevelData levelData = new()
+            {
+                width = jsonData.width,
+                height = jsonData.height,
+                tiles = string.Join("", jsonData.tiles).ToCharArray()
+            };
 
             gridWidth = levelData.width;
             gridHeight = levelData.height;
@@ -229,13 +263,13 @@ public class LevelEditor : EditorWindow
 
     private char GetTileChar(GameObject tile)
     {
-        return LevelTileHelper.GetTileChar(tile, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab,
+        return LevelTileHelper.GetTileChar(tile, wallPrefab, waterPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab,
             bushPrefab, logPrefab, pillarPrefab, rockPrefab, stumpPrefab, treeBPrefab, treeGPrefab);
     }
 
     private GameObject GetTilePrefab(char tileChar)
     {
-        return LevelTileHelper.GetTilePrefab(tileChar, wallPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab, 
+        return LevelTileHelper.GetTilePrefab(tileChar, wallPrefab, waterPrefab, floorPrefab, objectPrefab, goalPrefab, playerPrefab, 
             bushPrefab, logPrefab, pillarPrefab, rockPrefab, stumpPrefab, treeBPrefab, treeGPrefab);
     }
 }

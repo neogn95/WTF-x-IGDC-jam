@@ -109,7 +109,7 @@ public class LevelTester : EditorWindow
 
     private GameObject GetTilePrefab(char tileChar)
     {
-        return LevelTileHelper.GetTilePrefab(tileChar, levelLoader.wallPrefab, levelLoader.floorPrefab,
+        return LevelTileHelper.GetTilePrefab(tileChar, levelLoader.wallPrefab, levelLoader.waterPrefab, levelLoader.floorPrefab,
             levelLoader.objectPrefab, levelLoader.goalPrefab, levelLoader.playerPrefab,
             levelLoader.bushPrefab, levelLoader.logPrefab, levelLoader.pillarPrefab,
             levelLoader.rockPrefab, levelLoader.stumpPrefab, levelLoader.treeBPrefab, levelLoader.treeGPrefab);

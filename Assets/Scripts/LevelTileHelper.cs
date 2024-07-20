@@ -13,11 +13,13 @@ public static class LevelTileHelper
     public const char Rock = 'R';
     public const char Stump = 'S';
     public const char Tree = 'T';
+    public const char Water = '6';
 
-    public static char GetTileChar(GameObject tile, GameObject wallPrefab, GameObject floorPrefab, GameObject objectPrefab, GameObject goalPrefab, GameObject playerPrefab,
+    public static char GetTileChar(GameObject tile, GameObject wallPrefab, GameObject waterPrefab, GameObject floorPrefab, GameObject objectPrefab, GameObject goalPrefab, GameObject playerPrefab,
         GameObject bushPrefab, GameObject logPrefab, GameObject pillarPrefab, GameObject rockPrefab, GameObject stumpPrefab, GameObject treeBPrefab, GameObject treeGPrefab)
     {
         if (tile == wallPrefab) return Wall;
+        if (tile == waterPrefab) return Water;
         if (tile == floorPrefab) return Floor;
         if (tile == objectPrefab) return Object;
         if (tile == goalPrefab) return Goal;
@@ -31,12 +33,13 @@ public static class LevelTileHelper
         return Floor; // Default to floor
     }
 
-    public static GameObject GetTilePrefab(char tileChar, GameObject wallPrefab, GameObject floorPrefab, GameObject objectPrefab, GameObject goalPrefab, GameObject playerPrefab,
+    public static GameObject GetTilePrefab(char tileChar, GameObject wallPrefab, GameObject waterPrefab, GameObject floorPrefab, GameObject objectPrefab, GameObject goalPrefab, GameObject playerPrefab,
         GameObject bushPrefab, GameObject logPrefab, GameObject pillarPrefab, GameObject rockPrefab, GameObject stumpPrefab, GameObject treeBPrefab, GameObject treeGPrefab)
     {
         switch (tileChar)
         {
             case Wall: return wallPrefab;
+            case Water: return waterPrefab;
             case Floor: return floorPrefab;
             case Object: return objectPrefab;
             case Goal: return goalPrefab;
