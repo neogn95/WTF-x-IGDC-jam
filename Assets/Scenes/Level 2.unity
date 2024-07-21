@@ -4122,6 +4122,29 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 586a7f4687521134a98e2b88094fd065, type: 3}
   m_PrefabInstance: {fileID: 2063501606}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2097166200 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7299697675352551383, guid: 7e2570f5aeb107c4ba2f974acb67b8d7, type: 3}
+  m_PrefabInstance: {fileID: 6699370910106588272}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2097166205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097166200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c591bcb2e476e438f20b39e572e67c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveTime: 0.2
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  stumpPrefab: {fileID: 1172248513899255426, guid: f6cdd59bb31453b4298df715b0a6e94c, type: 3}
+  logPrefab: {fileID: 5186686053417024926, guid: 6d45547b9f5a65147b59e6ea770ce6d4, type: 3}
 --- !u!1 &2104516434
 GameObject:
   m_ObjectHideFlags: 0
@@ -4541,6 +4564,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Log
       objectReference: {fileID: 0}
+    - target: {fileID: 7299697675352551383, guid: 7e2570f5aeb107c4ba2f974acb67b8d7, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7928143974791017837, guid: 7e2570f5aeb107c4ba2f974acb67b8d7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.035
@@ -4584,7 +4611,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7299697675352551383, guid: 7e2570f5aeb107c4ba2f974acb67b8d7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2097166205}
   m_SourcePrefab: {fileID: 100100000, guid: 7e2570f5aeb107c4ba2f974acb67b8d7, type: 3}
 --- !u!4 &7339250178092394173
 Transform:
@@ -4710,13 +4740,13 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   colorGradientTexture: {fileID: 0}
-  shallowColor: {r: 0.4274506, g: 0.7490196, b: 1, a: 1}
-  deepColor: {r: 0.04859352, g: 0.46637714, b: 0.7924528, a: 1}
+  shallowColor: {r: 0.42745054, g: 0.7490196, b: 1, a: 1}
+  deepColor: {r: 0.048593476, g: 0.46637714, b: 0.7924528, a: 1}
   colorDepth: 2.59
-  horizonColor: {r: 0.4274506, g: 0.7490196, b: 1, a: 1}
+  horizonColor: {r: 0.42745054, g: 0.7490196, b: 1, a: 1}
   horizonDistance: 20
   shoreFade: 0
-  shoreColor: {r: 0, g: 0.98039216, b: 0.30193743, a: 0}
+  shoreColor: {r: 0, g: 0.98039216, b: 0.30193737, a: 0}
   shoreStrength: 0
   shoreBlend: 0
   shoreDepth: 0
