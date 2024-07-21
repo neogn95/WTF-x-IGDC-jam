@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class LogBehavior : MonoBehaviour
 {
-    public void Roll(Vector2Int direction)
+    public void Roll(Vector2Int direction) 
     {
         Vector2Int position = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
         Vector2Int nextPosition = position + direction;
