@@ -68,12 +68,12 @@ public class LevelLoader : MonoBehaviour
                 GameObject tilePrefab = GetTilePrefab(levelData.tiles[index]);
 
                 // Determine the Z position (height) based on the tile type
-                float z = (tilePrefab.name == "Floor" || tilePrefab.name == "Water") ? 0f : 1f;
+                float z = (tilePrefab.name == "Rock" ) ? 1f : 0f;
 
                 // Apply the offset to center the grid
                 Vector3 position = new Vector3(x + offsetX, z, y + offsetY);
 
-                Instantiate(tilePrefab, position, Quaternion.identity, transform);
+                Instantiate(tilePrefab, position, tilePrefab.transform.rotation, transform);
 
                 // Always place a floor tile if the current tile is not Water or Floor
                 if (tilePrefab.name != "Water" && tilePrefab != floorPrefab)
