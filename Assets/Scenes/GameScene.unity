@@ -359,6 +359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallPrefab: {fileID: 2130620355895353419, guid: caee4acdb7c82d24a833a40ca1670f84, type: 3}
+  waterPrefab: {fileID: 0}
   floorPrefab: {fileID: 1595337241231999962, guid: 208c5fd004fdef543bf8afdfa8f256c7, type: 3}
   objectPrefab: {fileID: 0}
   goalPrefab: {fileID: 2130620355895353419, guid: 0a5534efdaff30f42b93a1b9f51b147a, type: 3}
@@ -504,16 +505,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e7b4574d275db24cb9fd61f4a87e7eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useGridMovement: 1
-  gridAlignedSpeed: 5
   moveSpeed: 5
-  acceleration: 50
-  deceleration: 50
-  airControl: 0.3
-  enableJump: 1
-  jumpForce: 5
-  jumpCooldown: 0.1
-  gravityMultiplier: 2.5
   cameraTransform: {fileID: 963194228}
 --- !u!54 &1070842199
 Rigidbody:
@@ -542,6 +534,53 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &1517699894
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1517699896}
+  - component: {fileID: 1517699895}
+  m_Layer: 0
+  m_Name: GameplayManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1517699895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1517699894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc1dcfd83217ee74b8ed576e4420f2f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 1070842193}
+  logPrefab: {fileID: 5186686053417024926, guid: 6d45547b9f5a65147b59e6ea770ce6d4, type: 3}
+  stumpPrefab: {fileID: 1172248513899255426, guid: f6cdd59bb31453b4298df715b0a6e94c, type: 3}
+--- !u!4 &1517699896
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1517699894}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1696397851
 GameObject:
   m_ObjectHideFlags: 0
@@ -704,3 +743,4 @@ SceneRoots:
   - {fileID: 1696397855}
   - {fileID: 1070842197}
   - {fileID: 1032233838}
+  - {fileID: 1517699896}

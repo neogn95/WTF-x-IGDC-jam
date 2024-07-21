@@ -27,6 +27,10 @@ public class CharacterController : MonoBehaviour
     private bool isGrounded;
     private float lastJumpTime;
 
+    // New variables for grid-based gameplay
+    private bool isMovingOnGrid = false;
+    private Vector3 gridMoveTarget;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -59,7 +63,14 @@ public class CharacterController : MonoBehaviour
     {
         if (useGridMovement)
         {
-            MoveGridAligned();
+            if (isMovingOnGrid)
+            {
+                MoveTowardsGridTarget();
+            }
+            else
+            {
+                MoveGridAligned();
+            }
         }
         else
         {
@@ -71,6 +82,7 @@ public class CharacterController : MonoBehaviour
 
     void HandleSmoothInput()
     {
+        // Existing smooth input handling code
         float moveHorizontal = Input.GetAxisRaw("Horizontal");
         float moveVertical = Input.GetAxisRaw("Vertical");
 
@@ -81,6 +93,7 @@ public class CharacterController : MonoBehaviour
 
     void MoveSmoothly()
     {
+        // Existing smooth movement code
         Vector3 targetVelocity = moveDirection * moveSpeed;
         Vector3 velocityChange = targetVelocity - rb.velocity;
         velocityChange.y = 0f;
@@ -94,18 +107,33 @@ public class CharacterController : MonoBehaviour
 
     void HandleGridAlignedInput()
     {
+        if (isMovingOnGrid) return;
+
         float moveHorizontal = Input.GetAxisRaw("Horizontal");
         float moveVertical = Input.GetAxisRaw("Vertical");
 
-        Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up).normalized;
-        Vector3 cameraRight = Vector3.ProjectOnPlane(cameraTransform.right, Vector3.up).normalized;
+        if (moveHorizontal != 0 || moveVertical != 0)
+        {
+            Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up).normalized;
+            Vector3 cameraRight = Vector3.ProjectOnPlane(cameraTransform.right, Vector3.up).normalized;
 
-        Vector3 movement = cameraRight * moveHorizontal + cameraForward * moveVertical;
-        moveDirection = SnapToNearestAxis(movement);
+            Vector3 movement = cameraRight * moveHorizontal + cameraForward * moveVertical;
+            moveDirection = SnapToNearestAxis(movement);
+
+            Vector2Int gridDirection = new Vector2Int(Mathf.RoundToInt(moveDirection.x), Mathf.RoundToInt(moveDirection.z));
+            Vector2Int currentPosition = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
+
+            if (GameplayManager.Instance.TryMovePlayer(currentPosition, gridDirection))
+            {
+                isMovingOnGrid = true;
+                gridMoveTarget = transform.position + moveDirection;
+            }
+        }
     }
 
     void MoveGridAligned()
     {
+        // Existing grid-aligned movement code
         Vector3 targetVelocity = moveDirection * gridAlignedSpeed;
         Vector3 velocityChange = targetVelocity - rb.velocity;
         velocityChange.y = 0f;
@@ -117,8 +145,20 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    void MoveTowardsGridTarget()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, gridMoveTarget, gridAlignedSpeed * Time.fixedDeltaTime);
+
+        if (Vector3.Distance(transform.position, gridMoveTarget) < 0.01f)
+        {
+            transform.position = gridMoveTarget;
+            isMovingOnGrid = false;
+        }
+    }
+
     Vector3 SnapToNearestAxis(Vector3 direction)
     {
+        // Existing SnapToNearestAxis code
         if (direction == Vector3.zero) return Vector3.zero;
 
         float x = Mathf.Abs(direction.x);
@@ -136,6 +176,7 @@ public class CharacterController : MonoBehaviour
 
     void HandleJump()
     {
+        // Existing jump handling code
         if (Input.GetButtonDown("Jump") && isGrounded && Time.time > lastJumpTime + jumpCooldown)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -146,6 +187,7 @@ public class CharacterController : MonoBehaviour
 
     void ApplyGravity()
     {
+        // Existing gravity application code
         if (!isGrounded)
         {
             rb.AddForce(Physics.gravity * (gravityMultiplier - 1), ForceMode.Acceleration);
@@ -154,6 +196,7 @@ public class CharacterController : MonoBehaviour
 
     void OnCollisionStay(Collision collision)
     {
+        // Existing ground check code
         for (int i = 0; i < collision.contactCount; i++)
         {
             Vector3 normal = collision.GetContact(i).normal;
@@ -167,6 +210,7 @@ public class CharacterController : MonoBehaviour
 
     void OnCollisionExit(Collision collision)
     {
+        // Existing ground check code
         isGrounded = false;
     }
 }
