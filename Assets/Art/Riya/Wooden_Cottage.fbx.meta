@@ -3,7 +3,37 @@ guid: 1936be166292c144d8de384824791d5d
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 57eb9c9cf664aae48aac45c79402e668, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: 58c06e31f39a4634f85a5bf778ea5708, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.003
+    second: {fileID: 2100000, guid: 143eb694124a9fa44a43d15b8805f42d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.004
+    second: {fileID: 2100000, guid: db98d133489c4214a9274ca5de2f2bc5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Stylized_cottage_material
+    second: {fileID: 2100000, guid: fb4c182f0a740fc4ebf882d327497007, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Stylized_cottage_material_baseColor
+    second: {fileID: 2800000, guid: 805e8510a758f8b47b57df65adf93eb7, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

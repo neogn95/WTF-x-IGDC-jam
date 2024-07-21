@@ -3,7 +3,17 @@ guid: 4278d8a3147b691469b140f943e212fd
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.004
+    second: {fileID: 2100000, guid: e4ece23757c3684439a3c96e1e7f5741, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: flat-seamless-stone-texture-gray-stones-vector-26761710
+    second: {fileID: 2800000, guid: 24ad66f3eb9e2e14194e9a7136adb3ed, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
